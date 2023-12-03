@@ -7,6 +7,7 @@ import gleam/string
 import simplifile
 import day1
 import day2
+import day3
 
 pub fn main() {
   case run() {
@@ -18,7 +19,11 @@ pub fn main() {
 fn run() {
   use day <- result.try(day_arg())
 
-  let days = [Day(day1.part1, day1.part2), Day(day2.part1, day2.part2)]
+  let days = [
+    Day(day1.part1, day1.part2),
+    Day(day2.part1, day2.part2),
+    Day(day3.part1, day3.part2),
+  ]
   use day_impl <- result.try(
     list.at(days, day - 1)
     |> result.map_error(fn(_) { "no solution for day " <> int.to_string(day) }),
@@ -31,10 +36,8 @@ fn run() {
     }),
   )
 
-  io.print("Part 1: ")
-  io.println(int.to_string(day_impl.part1(input)))
-  io.print("Part 2: ")
-  io.println(int.to_string(day_impl.part2(input)))
+  io.println("Part 1: " <> int.to_string(day_impl.part1(input)))
+  io.println("Part 2: " <> int.to_string(day_impl.part2(input)))
 }
 
 fn day_arg() {
