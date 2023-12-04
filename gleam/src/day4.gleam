@@ -1,6 +1,9 @@
+import gleam/dict.{Dict}
 import gleam/set.{Set}
 import gleam/list
+import gleam/iterator as iter
 import gleam/int
+import gleam/option
 
 pub fn part1(input: String) -> Int {
   fold_cards(
@@ -19,6 +22,47 @@ pub fn part1(input: String) -> Int {
       )
     },
   )
+}
+
+pub fn part2(input: String) -> Int {
+  let #(counts, _) = fold_cards(<<input:utf8>>, #(dict.new(), 0), fold_part2)
+  dict.fold(counts, 0, fn(sum, _, count) { sum + count })
+}
+
+fn fold_part2(acc: #(Dict(Int, Int), Int), card: Card) -> #(Dict(Int, Int), Int) {
+  let #(counts, idx) = acc
+  let matches =
+    list.fold(
+      card.own,
+      0,
+      fn(matches, num) {
+        matches + case set.contains(card.winning, num) {
+          True -> 1
+          False -> 0
+        }
+      },
+    )
+
+  let counts = dict.update(counts, idx, fn(count) { option.unwrap(count, 1) })
+  let assert Ok(this_count) = dict.get(counts, idx)
+
+  // proof that exclusive ranges are superior
+  let counts = case matches > 0 {
+    True ->
+      iter.range(idx + 1, idx + matches)
+      |> iter.fold(
+        counts,
+        fn(counts, idx) {
+          dict.update(
+            counts,
+            idx,
+            fn(count) { option.unwrap(count, 1) + this_count },
+          )
+        },
+      )
+    False -> counts
+  }
+  #(counts, idx + 1)
 }
 
 type Card {
@@ -94,8 +138,4 @@ fn do_parse_unsigned(input: BitArray, acc: Int) -> #(Int, BitArray) {
       do_parse_unsigned(tail, acc * 10 + b - 48)
     _ -> #(acc, input)
   }
-}
-
-pub fn part2(_input: String) -> Int {
-  0
 }
