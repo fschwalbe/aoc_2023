@@ -2,6 +2,7 @@ import gleam/dict.{Dict}
 import gleam/set.{Set}
 import gleam/list
 import gleam/iterator as iter
+import gleam/bool
 import gleam/int
 import gleam/option
 
@@ -47,20 +48,19 @@ fn fold_part2(acc: #(Dict(Int, Int), Int), card: Card) -> #(Dict(Int, Int), Int)
   let assert Ok(this_count) = dict.get(counts, idx)
 
   // proof that exclusive ranges are superior
-  let counts = case matches > 0 {
-    True ->
-      iter.range(idx + 1, idx + matches)
-      |> iter.fold(
-        counts,
-        fn(counts, idx) {
-          dict.update(
-            counts,
-            idx,
-            fn(count) { option.unwrap(count, 1) + this_count },
-          )
-        },
-      )
-    False -> counts
+  let counts = {
+    use <- bool.guard(matches == 0, counts)
+    iter.range(idx + 1, idx + matches)
+    |> iter.fold(
+      counts,
+      fn(counts, idx) {
+        dict.update(
+          counts,
+          idx,
+          fn(count) { option.unwrap(count, 1) + this_count },
+        )
+      },
+    )
   }
   #(counts, idx + 1)
 }
