@@ -8,6 +8,7 @@ import simplifile
 import day1
 import day2
 import day3
+import day4
 
 pub fn main() {
   case run() {
@@ -17,27 +18,30 @@ pub fn main() {
 }
 
 fn run() {
-  use day <- result.try(day_arg())
+  use day_num <- result.try(day_arg())
 
   let days = [
     Day(day1.part1, day1.part2),
     Day(day2.part1, day2.part2),
     Day(day3.part1, day3.part2),
+    Day(day4.part1, day4.part2),
   ]
-  use day_impl <- result.try(
-    list.at(days, day - 1)
-    |> result.map_error(fn(_) { "no solution for day " <> int.to_string(day) }),
+  use day <- result.try(
+    list.at(days, day_num - 1)
+    |> result.map_error(fn(_) {
+      "no solution for day " <> int.to_string(day_num)
+    }),
   )
 
   use input <- result.map(
-    simplifile.read("../input/" <> int.to_string(day))
+    simplifile.read("../input/" <> int.to_string(day_num))
     |> result.map_error(fn(err) {
       "failed to read input file (" <> string.inspect(err) <> ")"
     }),
   )
 
-  io.println("Part 1: " <> int.to_string(day_impl.part1(input)))
-  io.println("Part 2: " <> int.to_string(day_impl.part2(input)))
+  io.println("Part 1: " <> int.to_string(day.part1(input)))
+  io.println("Part 2: " <> int.to_string(day.part2(input)))
 }
 
 fn day_arg() {
