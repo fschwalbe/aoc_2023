@@ -10,18 +10,7 @@ pub fn part1(input: String) -> Int {
   fold_cards(
     <<input:utf8>>,
     0,
-    fn(sum, card) {
-      sum + list.fold(
-        card.own,
-        0,
-        fn(points, num) {
-          case set.contains(card.winning, num) {
-            True -> int.max(1, points * 2)
-            False -> points
-          }
-        },
-      )
-    },
+    fn(sum, card) { sum + int.bitwise_shift_left(1, matches(card) - 1) },
   )
 }
 
@@ -32,17 +21,7 @@ pub fn part2(input: String) -> Int {
 
 fn fold_part2(acc: #(Dict(Int, Int), Int), card: Card) -> #(Dict(Int, Int), Int) {
   let #(counts, idx) = acc
-  let matches =
-    list.fold(
-      card.own,
-      0,
-      fn(matches, num) {
-        matches + case set.contains(card.winning, num) {
-          True -> 1
-          False -> 0
-        }
-      },
-    )
+  let matches = matches(card)
 
   let counts = dict.update(counts, idx, fn(count) { option.unwrap(count, 1) })
   let assert Ok(this_count) = dict.get(counts, idx)
@@ -67,6 +46,11 @@ fn fold_part2(acc: #(Dict(Int, Int), Int), card: Card) -> #(Dict(Int, Int), Int)
 
 type Card {
   Card(winning: Set(Int), own: List(Int))
+}
+
+fn matches(card: Card) -> Int {
+  set.take(from: card.winning, keeping: card.own)
+  |> set.size
 }
 
 fn fold_cards(input: BitArray, initial: a, fun: fn(a, Card) -> a) {
