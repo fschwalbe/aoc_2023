@@ -1,5 +1,5 @@
-import gleam/dict.{Dict}
-import gleam/set.{Set}
+import gleam/dict.{type Dict}
+import gleam/set.{type Set}
 import gleam/list
 import gleam/iterator as iter
 import gleam/bool

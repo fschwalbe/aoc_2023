@@ -2,8 +2,8 @@ import gleam/int
 import gleam/io
 import gleam/result
 import gleam/erlang
-import gleam/erlang/atom.{Atom}
-import gleam/dynamic.{Dynamic}
+import gleam/erlang/atom.{type Atom}
+import gleam/dynamic.{type Dynamic}
 import gleam/string
 import simplifile
 

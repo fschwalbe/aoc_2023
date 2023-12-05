@@ -1,5 +1,5 @@
 // no type import syntax because it breaks helix syntax highlighting
-import gleam/option.{None, Option, Some}
+import gleam/option.{type Option, None, Some}
 
 pub fn part1(input: String) -> Int {
   do_part1(0, None, None, <<input:utf8>>)
