@@ -60,7 +60,14 @@ fn time_part(day: Int, part: Part, input: String) -> Result(Nil, String) {
     Part2 -> "part2"
   }
   let function = atom.create_from_string(part_fn)
-  let #(time, answer) = tc(module, function, [dynamic.from(input)])
+  let args = [dynamic.from(input)]
+  let #(time, answer) = tc(module, function, args)
+  // rerun if it took less than 0.5 seconds
+  let time = case time < 500_000 {
+    True -> tc(module, function, args).0
+    False -> time
+  }
+
   use answer <- result.map(
     dynamic.int(answer)
     |> result.map_error(fn(_) {
