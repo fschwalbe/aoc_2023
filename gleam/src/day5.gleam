@@ -4,6 +4,17 @@ import gleam/bool
 import gleam/int
 import gleam/result
 
+type Parse(a) =
+  #(a, BitArray)
+
+type Range {
+  Range(start: Int, length: Int)
+}
+
+type Mapping {
+  Mapping(dest: Int, source: Int, length: Int)
+}
+
 pub fn part1(input: String) -> Int {
   let #(seeds, input) = parse_seeds(<<input:utf8>>)
   let assert Ok(min) =
@@ -46,17 +57,6 @@ pub fn part2(input: String) -> Int {
     |> iter.map(fn(r) { r.start })
     |> iter.reduce(with: int.min)
   min
-}
-
-type Parse(a) =
-  #(a, BitArray)
-
-type Range {
-  Range(start: Int, length: Int)
-}
-
-type Mapping {
-  Mapping(dest: Int, source: Int, length: Int)
 }
 
 fn map_range(range: Range, mappings: List(Mapping)) -> Iterator(Range) {
