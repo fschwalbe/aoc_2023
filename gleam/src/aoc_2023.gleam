@@ -54,7 +54,7 @@ type Part {
 
 fn time_part(day: Int, part: Part, input: String) -> Result(Nil, String) {
   let day = int.to_string(day)
-  let module = atom.create_from_string("day" <> day)
+  let module = atom.create_from_string("aoc_2023@day" <> day)
   let part_fn = case part {
     Part1 -> "part1"
     Part2 -> "part2"
